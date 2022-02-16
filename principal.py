@@ -143,7 +143,7 @@ if archivo_registros_presencia is not None:
     fig.update_traces(textposition='inside', textinfo='percent+label')
     st.plotly_chart(fig)    
 
-   # Mapa de registros de presencia
+    # Mapa de registros de presencia
     st.header('Mapa de registros de presencia de ' + filtro_especie)
     st.subheader('st.map()')
     st.map(registros_presencia.rename(columns = {'decimalLongitude':'longitude', 'decimalLatitude':'latitude'}))
@@ -169,3 +169,26 @@ if archivo_registros_presencia is not None:
     folium.LayerControl().add_to(m)    
     # Despliegue del mapa
     folium_static(m)
+    
+    # Mapa de coropletas de registros de presencia en ASP
+    st.header('Mapa de cantidad de registros de presencia en ASP de ' + filtro_especie)
+    st.subheader('folium.Choropleth()')    
+    # Capa base
+    m = folium.Map(location=[9.6, -84.2], tiles='CartoDB positron', zoom_start=8)
+    # Capa de coropletas
+    folium.Choropleth(
+        name="Cantidad de registros en ASP",
+        geo_data=asp,
+        data=asp_registros,
+        columns=['id', 'cantidad_registros_presencia'],
+        bins=8,
+        key_on='feature.properties.id',
+        fill_color='Reds', 
+        fill_opacity=0.5, 
+        line_opacity=1,
+        legend_name='Cantidad de registros de presencia',
+        smooth_factor=0).add_to(m)
+    # Control de capas
+    folium.LayerControl().add_to(m)        
+    # Despliegue del mapa
+    folium_static(m)   
