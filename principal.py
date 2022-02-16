@@ -143,4 +143,7 @@ if archivo_registros_presencia is not None:
     fig.update_traces(textposition='inside', textinfo='percent+label')
     st.plotly_chart(fig)    
 
-   
+   # Mapa de registros de presencia
+    st.header('Mapa de registros de presencia de ' + filtro_especie)
+    st.subheader('st.map()')
+    st.map(registros_presencia.rename(columns = {'decimalLongitude':'longitude', 'decimalLatitude':'latitude'}))
