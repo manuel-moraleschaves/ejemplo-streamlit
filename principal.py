@@ -103,4 +103,18 @@ if archivo_registros_presencia is not None:
                  title='Historial de registros de presencia por año de ' + filtro_especie)
     st.plotly_chart(fig)
 
+    # Gráficos de estacionalidad de registros de presencia por mes
+    st.header('Gráficos de estacionalidad de registros de presencia por mes de ' + filtro_especie)
+    registros_presencia_grp_mes = pd.DataFrame(registros_presencia.groupby(registros_presencia['eventDate'].dt.month).count().eventDate)
+    registros_presencia_grp_mes.columns = ['registros_presencia']
+    # streamlit
+    st.subheader('st.area_chart()')
+    st.area_chart(registros_presencia_grp_mes)
+    # plotly
+    st.subheader('px.area()')
+    fig = px.area(registros_presencia_grp_mes, 
+                 labels={'eventDate':'Mes', 'value':'Registros de presencia'},
+                 title='Estacionalidad de registros de presencia por mes de ' + filtro_especie)
+    st.plotly_chart(fig)      
+
     
