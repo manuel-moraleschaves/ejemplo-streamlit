@@ -124,7 +124,7 @@ if archivo_registros_presencia is not None:
     asp_registros_grafico = asp_registros.loc[asp_registros['cantidad_registros_presencia'] > 0, 
                                                             ["nombre_asp", "cantidad_registros_presencia"]].sort_values("cantidad_registros_presencia", ascending=[False]).head(15)
     asp_registros_grafico = asp_registros_grafico.set_index('nombre_asp')  
-    st.write(asp_registros_grafico)                                                       
+    # st.write(asp_registros_grafico) para debug                                                       
     st.header('Gráficos de cantidad de registros de presencia por ASP de ' + filtro_especie)
     # streamlit
     st.subheader('st.bar_chart()')
