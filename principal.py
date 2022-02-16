@@ -147,3 +147,25 @@ if archivo_registros_presencia is not None:
     st.header('Mapa de registros de presencia de ' + filtro_especie)
     st.subheader('st.map()')
     st.map(registros_presencia.rename(columns = {'decimalLongitude':'longitude', 'decimalLatitude':'latitude'}))
+
+    # Mapa de calor y de registros agrupados
+    st.header('Mapa de calor y de registros agrupados de ' + filtro_especie)
+    st.subheader('folium.plugins.HeatMap(), folium.plugins.MarkerCluster()')    
+    # Capa base
+    m = folium.Map(location=[9.6, -84.2], tiles='CartoDB dark_matter', zoom_start=8)
+    # Capa de calor
+    HeatMap(data=registros_presencia[['decimalLatitude', 'decimalLongitude']],
+            name='Mapa de calor').add_to(m)
+    # Capa de ASP
+    folium.GeoJson(data=asp, name='ASP').add_to(m)
+    # Capa de registros de presencia agrupados
+    mc = MarkerCluster(name='Registros agrupados')
+    for idx, row in registros_presencia.iterrows():
+        if not math.isnan(row['decimalLongitude']) and not math.isnan(row['decimalLatitude']):
+            mc.add_child(Marker([row['decimalLatitude'], row['decimalLongitude']], 
+                                popup=row['species']))
+    m.add_child(mc)
+    # Control de capas
+    folium.LayerControl().add_to(m)    
+    # Despliegue del mapa
+    folium_static(m)
