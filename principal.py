@@ -78,3 +78,15 @@ if archivo_registros_presencia is not None:
     # Conteo de registros de presencia en cada ASP
     asp_registros = asp_contienen_registros.groupby("id").agg(cantidad_registros_presencia = ("gbifID","count"))
     asp_registros = asp_registros.reset_index() # para convertir la serie a dataframe
+
+
+    #
+    # SALIDAS
+    #
+
+    # Tabla de registros de presencia
+    st.header('Tabla de registros de presencia de ' + filtro_especie)
+    st.subheader('st.dataframe()')
+    st.dataframe(registros_presencia[['family', 'species', 'eventDate', 'locality', 'occurrenceID']].rename(columns = {'family':'Familia', 'species':'Especie', 'eventDate':'Fecha', 'locality':'Localidad', 'occurrenceID':'Origen del dato'}))
+
+    
