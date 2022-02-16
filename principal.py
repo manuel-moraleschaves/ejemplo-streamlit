@@ -117,4 +117,30 @@ if archivo_registros_presencia is not None:
                  title='Estacionalidad de registros de presencia por mes de ' + filtro_especie)
     st.plotly_chart(fig)      
 
-    
+    # Gráficos de cantidad de registros de presencia por ASP
+    # "Join" para agregar la columna con el conteo a la capa de ASP
+    asp_registros = asp_registros.join(asp.set_index('id'), on='id', rsuffix='_b')
+    # Dataframe filtrado para usar en graficación
+    asp_registros_grafico = asp_registros.loc[asp_registros['cantidad_registros_presencia'] > 0, 
+                                                            ["nombre_asp", "cantidad_registros_presencia"]].sort_values("cantidad_registros_presencia", ascending=[False]).head(15)
+    asp_registros_grafico = asp_registros_grafico.set_index('nombre_asp')  
+    st.write(asp_registros_grafico)                                                       
+    st.header('Gráficos de cantidad de registros de presencia por ASP de ' + filtro_especie)
+    # streamlit
+    st.subheader('st.bar_chart()')
+    st.bar_chart(asp_registros_grafico)    
+    # plotly
+    st.subheader('px.bar()')
+    fig = px.bar(asp_registros_grafico, 
+                 labels={'nombre_asp':'ASP', 'cantidad_registros_presencia':'Registros de presencia'},
+                 title='Cantidad de registros de presencia por ASP de ' + filtro_especie)
+    st.plotly_chart(fig)    
+    st.subheader('px.pie()')
+    fig = px.pie(asp_registros_grafico, 
+                 names=asp_registros_grafico.index,
+                 values='cantidad_registros_presencia',
+                 title='Porcentaje de registros de presencia por ASP de ' + filtro_especie)
+    fig.update_traces(textposition='inside', textinfo='percent+label')
+    st.plotly_chart(fig)    
+
+   
