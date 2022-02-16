@@ -89,4 +89,18 @@ if archivo_registros_presencia is not None:
     st.subheader('st.dataframe()')
     st.dataframe(registros_presencia[['family', 'species', 'eventDate', 'locality', 'occurrenceID']].rename(columns = {'family':'Familia', 'species':'Especie', 'eventDate':'Fecha', 'locality':'Localidad', 'occurrenceID':'Origen del dato'}))
 
+    # Gráficos de historial de registros de presencia por año
+    st.header('Gráficos de historial de registros de presencia por año de ' + filtro_especie)
+    registros_presencia_grp_anio = pd.DataFrame(registros_presencia.groupby(registros_presencia['eventDate'].dt.year).count().eventDate)
+    registros_presencia_grp_anio.columns = ['registros_presencia']
+    # streamlit
+    st.subheader('st.bar_chart()')
+    st.bar_chart(registros_presencia_grp_anio)
+    # plotly
+    st.subheader('px.bar()')
+    fig = px.bar(registros_presencia_grp_anio, 
+                 labels={'eventDate':'Año', 'value':'Registros de presencia'},
+                 title='Historial de registros de presencia por año de ' + filtro_especie)
+    st.plotly_chart(fig)
+
     
